@@ -178,31 +178,17 @@ const ConsultingEngine = () => {
                     const data = await response.json()
                     // If the function returns the raw JSON structure directly
                     return data
+                } else {
+                    console.error("Edge Function Error:", await response.text())
+                    throw new Error("Edge Function Verification Failed")
                 }
             } catch (e) {
-                console.warn("Edge Function call failed, trying direct API...", e)
+                console.warn("Edge Function failed. Switching to fail-safe mode.", e)
+                throw e // Throwing here will be caught by startSimulation, which triggers Mock Data fallback
             }
         }
 
-        // 2. Direct API Call (Dev/Legacy Fallback)
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY
-        if (!apiKey) throw new Error("No Gemini API Key found")
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        })
-
-        if (!response.ok) throw new Error(`Gemini API Error: ${response.status}`)
-
-        const data = await response.json()
-        const text = data.candidates[0].content.parts[0].text
-        // Clean markdown code blocks if present
-        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim()
-        return JSON.parse(jsonStr)
+        throw new Error("No secure API configuration found.")
     }
 
     const addLog = (msg: string) => setProcessingLog(prev => [...prev.slice(-4), msg])

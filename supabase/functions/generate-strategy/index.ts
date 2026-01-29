@@ -10,7 +10,6 @@ serve(async (req) => {
         return new Response('ok', { headers: corsHeaders })
     }
 
-
     try {
         const { prompt } = await req.json()
         const apiKey = Deno.env.get('GEMINI_API_KEY')
@@ -36,7 +35,7 @@ serve(async (req) => {
         Mark the recommendation as "AI-Generated Strategic Advisory - Verification Advised".
         `
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, { // Upgraded to Pro model for better logic
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

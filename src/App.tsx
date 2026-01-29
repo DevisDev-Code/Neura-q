@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'next-themes'
 import { UserProvider, useUser } from './context/UserContext'
 import { Brain, LogIn, LogOut, Menu, X } from 'lucide-react'
@@ -20,9 +20,7 @@ function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <UserProvider>
-        <Router>
-          <AppContent />
-        </Router>
+        <AppContent />
       </UserProvider>
     </ThemeProvider>
   )

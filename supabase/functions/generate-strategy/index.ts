@@ -35,14 +35,21 @@ serve(async (req) => {
         Mark the recommendation as "AI-Generated Strategic Advisory - Verification Advised".
         `
 
-        // Using gemini-1.5-pro for maximum reasoning capability
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, {
+        // Using gemini-1.5-flash as it is supported (Pro returned 404)
+        // Added safety settings to prevent "No response candidates" error
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: enhancedPrompt }] }]
+                contents: [{ parts: [{ text: enhancedPrompt }] }],
+                safetySettings: [
+                    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+                ]
             })
         })
 

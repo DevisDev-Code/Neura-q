@@ -1,92 +1,107 @@
-/// <reference path="./deno.d.ts" />
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
-type EnhanceRequest = {
-	text?: string
+const corsHeaders = {
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+	'Access-Control-Allow-Methods': 'POST, OPTIONS',
+}
+
+interface EnhanceRequest {
+	text: string
+	context?: string
 }
 
 serve(async (req) => {
-	const origin = req.headers.get('Origin') || '*'
-	const corsHeaders: Record<string, string> = {
-		'Access-Control-Allow-Origin': origin,
-		Vary: 'Origin',
-		'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-		'Access-Control-Allow-Methods': 'POST, OPTIONS'
-	}
-
+	// Handle CORS preflight requests
 	if (req.method === 'OPTIONS') {
-		return new Response('ok', { headers: corsHeaders })
+		return new Response(null, { headers: corsHeaders })
 	}
 
 	try {
-		if (req.method !== 'POST') {
-			return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-				status: 405
-			})
+		const { text, context }: EnhanceRequest = await req.json()
+
+		if (!text || text.trim().length === 0) {
+			throw new Error('Text is required for enhancement')
 		}
 
-		const { text }: EnhanceRequest = await req.json().catch(() => ({}))
-		if (!text || typeof text !== 'string') {
-			return new Response(JSON.stringify({ error: 'Invalid payload: missing text' }), {
-				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-				status: 400
-			})
+		// Get Gemini API key from environment
+		const geminiApiKey = Deno.env.get('GEMINI_API_KEY')
+		if (!geminiApiKey) {
+			throw new Error('Gemini API key not configured')
 		}
 
-		const apiKey = Deno.env.get('GEMINI_API_KEY')
-		if (!apiKey) {
-			return new Response(JSON.stringify({ error: 'Server misconfiguration: GEMINI_API_KEY missing' }), {
-				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-				status: 500
+		// Enhanced prompt for better text improvement
+		const enhancementPrompt = `
+You are an expert writing assistant. Please enhance the following text to make it clearer, more detailed, and more effective while preserving the original meaning and intent.
+
+Guidelines:
+- Maintain the original tone and purpose
+- Add relevant details and context where helpful
+- Improve clarity and readability
+- Fix any grammar or spelling issues
+- Make it more engaging and specific
+- Keep it concise but comprehensive
+- Preserve any technical terms or specific requirements
+
+${context ? `Context: This text is for ${context}` : ''}
+
+Original text to enhance:
+"${text}"
+
+Please return only the enhanced version without any explanations or additional commentary.
+`
+
+		// Call Gemini API
+		const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiApiKey}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				contents: [{
+					parts: [{
+						text: enhancementPrompt
+					}]
+				}],
+				generationConfig: {
+					temperature: 0.3,
+					topK: 32,
+					topP: 1,
+					maxOutputTokens: 2048,
+				}
 			})
+		})
+
+		if (!geminiResponse.ok) {
+			throw new Error(`Gemini API error: ${geminiResponse.statusText}`)
 		}
 
-		const prompt = `Enhance the following text for clarity, tone, and impact while preserving the original intent. Return only the improved text without additional commentary.\n\nText:\n${text}`
+		const geminiResult = await geminiResponse.json()
 
-		const model = 'models/gemini-2.5-flash'
-		const resp = await fetch(
-			`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${apiKey}`,
+		if (!geminiResult.candidates || geminiResult.candidates.length === 0) {
+			throw new Error('No enhancement generated')
+		}
+
+		const enhancedText = geminiResult.candidates[0].content.parts[0].text.trim()
+
+		return new Response(
+			JSON.stringify({ enhancedText }),
 			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					contents: [
-						{
-							role: 'user',
-							parts: [{ text: prompt }]
-						}
-					],
-					generationConfig: {
-						temperature: 0.4,
-						topK: 40,
-						topP: 0.9,
-						maxOutputTokens: 1024
-					}
-				})
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+				status: 200,
 			}
 		)
 
-		if (!resp.ok) {
-			const text = await resp.text()
-			throw new Error(`Gemini error: ${resp.status} ${resp.statusText} - ${text}`)
-		}
-
-		const data = await resp.json()
-		const enhanced =
-			data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || '').join('') || ''
-
-		return new Response(JSON.stringify({ enhanced }), {
-			headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-			status: 200
-		})
-	} catch (err) {
-		console.error('enhance-prompt error:', err)
+	} catch (error) {
+		console.error('Enhancement error:', error)
 		return new Response(
-			JSON.stringify({ error: err instanceof Error ? err.message : 'Unknown error' }),
+			JSON.stringify({
+				error: error instanceof Error ? error.message : 'Enhancement failed',
+				details: 'Please try again or check your input'
+			}),
 			{
 				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-				status: 500
+				status: 500,
 			}
 		)
 	}

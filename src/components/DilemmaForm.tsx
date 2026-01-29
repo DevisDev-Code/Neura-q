@@ -9,7 +9,7 @@ import { supabase } from '../lib/supabase'
 import AIProcessingPopup from './AIProcessingPopup'
 import { toast } from 'sonner'
 import { useSpeechRecognition, SpeechField } from '../hooks/useSpeechRecognition'
-import { useTokenEnhance } from '../hooks/useTokenEnhance'
+
 
 // API endpoints handled via Env Vars + Config
 // API endpoints handled via Env Vars + Config
@@ -97,7 +97,7 @@ const DilemmaForm = () => {
   const [showProcessingPopup, setShowProcessingPopup] = useState(false)
 
   // Custom Hooks
-  const { enhanceText, enhancingField, setEnhancingField } = useTokenEnhance()
+
 
   // Local state for immediate input feedback
   const [contextVal, setContextVal] = useState('')
@@ -174,37 +174,7 @@ const DilemmaForm = () => {
     setValue('successMetrics', successVal)
   }, [contextVal, problemVal, mindsetVal, successVal, setValue])
 
-  const handleEnhance = async (field: string) => {
-    let textToEnhance = ''
-    if (field === 'context') textToEnhance = contextVal
-    if (field === 'problem') textToEnhance = problemVal
-    if (field === 'mindset') textToEnhance = mindsetVal
-    if (field === 'successMetrics') textToEnhance = successVal
 
-    if (!textToEnhance.trim()) {
-      toast.error('Please enter some text to enhance first.')
-      return
-    }
-
-    setEnhancingField(field)
-    try {
-      toast.info('Enhancing text with AI...')
-      const enhanced = await enhanceText(textToEnhance)
-      if (enhanced) {
-        if (field === 'context') setContextVal(enhanced)
-        if (field === 'problem') setProblemVal(enhanced)
-        if (field === 'mindset') setMindsetVal(enhanced)
-        if (field === 'successMetrics') setSuccessVal(enhanced)
-        toast.success('Text enhanced successfully!')
-      } else {
-        toast.warning('No enhancement returned.')
-      }
-    } catch (error) {
-      toast.error('Failed to enhance text. Check your API Key.')
-    } finally {
-      setEnhancingField(null)
-    }
-  }
 
   const toggleMic = (field: SpeechField) => {
     if (!speechSupported) {
@@ -322,9 +292,7 @@ const DilemmaForm = () => {
                   <button type="button" onClick={() => toggleMic('context')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'context' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                     <Mic className="w-4 h-4" />
                   </button>
-                  <button type="button" onClick={() => handleEnhance('context')} disabled={enhancingField === 'context'} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
-                    {enhancingField === 'context' ? <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                  </button>
+
                 </div>
               </div>
               {errors.context && <p className="text-red-400 text-sm">{errors.context.message}</p>}
@@ -344,9 +312,7 @@ const DilemmaForm = () => {
                   <button type="button" onClick={() => toggleMic('problem')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'problem' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                     <Mic className="w-4 h-4" />
                   </button>
-                  <button type="button" onClick={() => handleEnhance('problem')} disabled={enhancingField === 'problem'} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
-                    {enhancingField === 'problem' ? <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                  </button>
+
                 </div>
               </div>
               {errors.problem && <p className="text-red-400 text-sm">{errors.problem.message}</p>}
@@ -372,9 +338,7 @@ const DilemmaForm = () => {
                     <button type="button" onClick={() => toggleMic('mindset')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'mindset' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                       <Mic className="w-4 h-4" />
                     </button>
-                    <button type="button" onClick={() => handleEnhance('mindset')} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
-                      <Sparkles className="w-4 h-4" />
-                    </button>
+
                   </div>
                 </div>
               </div>
@@ -389,9 +353,7 @@ const DilemmaForm = () => {
                     <button type="button" onClick={() => toggleMic('successMetrics')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'successMetrics' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                       <Mic className="w-4 h-4" />
                     </button>
-                    <button type="button" onClick={() => handleEnhance('successMetrics')} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
-                      <Sparkles className="w-4 h-4" />
-                    </button>
+
                   </div>
                 </div>
               </div>

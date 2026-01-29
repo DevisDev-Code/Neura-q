@@ -35,9 +35,8 @@ serve(async (req) => {
         Mark the recommendation as "AI-Generated Strategic Advisory - Verification Advised".
         `
 
-        // Using gemini-1.5-flash as it is supported (Pro returned 404)
-        // Added safety settings to prevent "No response candidates" error
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        // Using user-specified model: gemini-3-flash-preview
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

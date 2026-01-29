@@ -138,9 +138,6 @@ const ConsultingEngine = () => {
     }
 
     const generateGeminiReport = async () => {
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY
-        if (!apiKey) throw new Error("No Gemini API Key found")
-
         const prompt = `
         Act as a high-end strategic consultant (MBB level). Analyze the following business scenario:
         Problem: ${formData.problem}
@@ -161,6 +158,35 @@ const ConsultingEngine = () => {
             "executive_summary": "Two paragraphs summarizing the strategic recommendation."
         }
         `
+
+        // 1. Try Supabase Edge Function (Secure Production Way)
+        const edgeFunctionUrl = import.meta.env.VITE_GENERATE_STRATEGY_URL
+        const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+        if (edgeFunctionUrl && anonKey) {
+            try {
+                const response = await fetch(edgeFunctionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${anonKey}`
+                    },
+                    body: JSON.stringify({ prompt })
+                })
+
+                if (response.ok) {
+                    const data = await response.json()
+                    // If the function returns the raw JSON structure directly
+                    return data
+                }
+            } catch (e) {
+                console.warn("Edge Function call failed, trying direct API...", e)
+            }
+        }
+
+        // 2. Direct API Call (Dev/Legacy Fallback)
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+        if (!apiKey) throw new Error("No Gemini API Key found")
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',

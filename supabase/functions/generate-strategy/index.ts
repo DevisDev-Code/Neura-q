@@ -35,7 +35,8 @@ serve(async (req) => {
         Mark the recommendation as "AI-Generated Strategic Advisory - Verification Advised".
         `
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, {
+        // Using gemini-1.5-flash for reliability and speed
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,6 +47,16 @@ serve(async (req) => {
         })
 
         const data = await response.json()
+
+        // Propagate the actual status code from Gemini so frontend knows if it failed
+        if (!response.ok) {
+            console.error("Gemini API Error:", data)
+            return new Response(JSON.stringify(data), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: response.status,
+            })
+        }
+
         return new Response(JSON.stringify(data), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 200,

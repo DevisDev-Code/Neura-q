@@ -176,8 +176,17 @@ const ConsultingEngine = () => {
 
                 if (response.ok) {
                     const data = await response.json()
-                    // If the function returns the raw JSON structure directly
-                    return data
+
+                    // Extract text from Gemini response structure
+                    const candidate = data.candidates?.[0]
+                    if (!candidate) throw new Error("No response candidates from AI")
+
+                    const text = candidate.content?.parts?.[0]?.text
+                    if (!text) throw new Error("Empty response from AI")
+
+                    // Clean and parse JSON
+                    const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim()
+                    return JSON.parse(jsonStr)
                 } else {
                     console.error("Edge Function Error:", await response.text())
                     throw new Error("Edge Function Verification Failed")
@@ -369,7 +378,7 @@ const ConsultingEngine = () => {
                                         <AlertTriangle /> <span className="font-bold">Key Risks</span>
                                     </div>
                                     <ul className="space-y-2 text-sm text-gray-300">
-                                        {reportData.risks.map((risk: string, i: number) => (
+                                        {reportData.risks?.map((risk: string, i: number) => (
                                             <li key={i}>• {risk}</li>
                                         ))}
                                     </ul>

@@ -1,0 +1,208 @@
+import { motion } from 'framer-motion'
+import { ArrowLeft, Shield, Eye, Database, Trash2, Mail } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
+const PrivacyPolicy = () => {
+  return (
+    <div className="w-full min-h-screen bg-black relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'linear-gradient(rgba(34,211,238,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.3) 1px, transparent 1px)',
+            backgroundSize: '60px 60px'
+          }} />
+        </div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen">
+        {/* Header */}
+        <div className="p-6">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-cyan-300 hover:text-cyan-200 transition-all duration-300 hover:translate-x-1"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Home
+          </Link>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="space-y-8"
+          >
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-950/90 to-blue-950/90 border border-cyan-400/30">
+                  <Shield className="w-8 h-8 text-cyan-300" />
+                </div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
+                  Privacy Policy
+                </h1>
+              </div>
+              <p className="text-cyan-100/80 text-lg">
+                Your privacy is fundamental to how we build Neura-Q
+              </p>
+              <p className="text-cyan-100/60 text-sm mt-2">
+                Last updated: June 2025
+              </p>
+            </div>
+
+            {/* Content Container */}
+            <div className="bg-gradient-to-br from-cyan-950/90 to-blue-950/90 border border-cyan-400/30 rounded-2xl p-8 backdrop-blur-sm space-y-8">
+              
+              {/* Overview */}
+              <section className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Eye className="w-6 h-6 text-cyan-400" />
+                  <h2 className="text-2xl font-bold text-cyan-300">Overview</h2>
+                </div>
+                <p className="text-cyan-100/80 leading-relaxed">
+                  At Neura-Q, we believe your personal data belongs to you. This Privacy Policy explains how we collect, 
+                  use, and protect your information when you use our AI-powered decision support platform.
+                </p>
+                <p className="text-cyan-100/80 leading-relaxed">
+                  We are committed to transparency and giving you control over your data. We only collect what's 
+                  necessary to provide our service and never sell your personal information to third parties.
+                </p>
+              </section>
+
+              {/* Information We Collect */}
+              <section className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Database className="w-6 h-6 text-cyan-400" />
+                  <h2 className="text-2xl font-bold text-cyan-300">Information We Collect</h2>
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="bg-black/20 rounded-lg p-4 border border-cyan-400/20">
+                    <h3 className="text-lg font-semibold text-cyan-200 mb-2">Decision Input Data</h3>
+                    <p className="text-cyan-100/70 text-sm leading-relaxed">
+                      When you use Neura-Q, we store the context, problems, and preferences you provide to our AI agents. 
+                      This data is essential for generating structured insights and maintaining your session history.
+                    </p>
+                  </div>
+
+                  <div className="bg-black/20 rounded-lg p-4 border border-cyan-400/20">
+                    <h3 className="text-lg font-semibold text-cyan-200 mb-2">AI Analysis Results</h3>
+                    <p className="text-cyan-100/70 text-sm leading-relaxed">
+                      We store the analysis results generated by our AI agents (Aeon, Nova, and Tess) tied to your 
+                      session. This allows you to review past insights and track your decision-making journey.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* How We Use Your Information */}
+              <section className="space-y-4">
+                <h2 className="text-2xl font-bold text-cyan-300">How We Use Your Information</h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-black/20 rounded-lg p-4 border border-green-400/20">
+                    <h3 className="text-lg font-semibold text-green-300 mb-2">✅ What We Do</h3>
+                    <ul className="text-green-100/70 text-sm space-y-1">
+                      <li>• Maintain your decision history</li>
+                      <li>• Improve our AI algorithms</li>
+                      <li>• Ensure platform security</li>
+                      <li>• Provide customer support</li>
+                    </ul>
+                  </div>
+                  <div className="bg-black/20 rounded-lg p-4 border border-red-400/20">
+                    <h3 className="text-lg font-semibold text-red-300 mb-2">❌ What We Don't Do</h3>
+                    <ul className="text-red-100/70 text-sm space-y-1">
+                      <li>• Sell your data to third parties</li>
+                      <li>• Share your decisions publicly</li>
+                      <li>• Use your data for advertising</li>
+                      <li>• Access your data without permission</li>
+                      <li>• Store unnecessary personal information</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              {/* Your Rights */}
+              <section className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Trash2 className="w-6 h-6 text-cyan-400" />
+                  <h2 className="text-2xl font-bold text-cyan-300">Your Rights</h2>
+                </div>
+                <p className="text-cyan-100/80 leading-relaxed">
+                  You have complete control over your data. You can:
+                </p>
+                <div className="bg-black/20 rounded-lg p-6 border border-cyan-400/20">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-cyan-200 font-semibold mb-3">Data Access & Control</h3>
+                      <ul className="text-cyan-100/70 text-sm space-y-2">
+                        <li>• View all your stored data</li>
+                        <li>• Export your decision history</li>
+                        <li>• Delete specific sessions</li>
+                        <li>• Request complete data deletion</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-cyan-200 font-semibold mb-3">Privacy Controls</h3>
+                      <ul className="text-cyan-100/70 text-sm space-y-2">
+                        <li>• Opt out of analytics</li>
+                        <li>• Control data retention periods</li>
+                        <li>• Manage communication preferences</li>
+                        <li>• Request data portability</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Contact */}
+              <section className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Mail className="w-6 h-6 text-cyan-400" />
+                  <h2 className="text-2xl font-bold text-cyan-300">Contact Us</h2>
+                </div>
+                <div className="bg-black/20 rounded-lg p-6 border border-cyan-400/20">
+                  <p className="text-cyan-100/80 leading-relaxed mb-4">
+                    If you have any questions about this Privacy Policy or want to exercise your data rights, 
+                    please contact us:
+                  </p>
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <a 
+                      href="mailto:devansh.khanna88@gmail.com" 
+                      className="flex items-center gap-2 text-cyan-300 hover:text-cyan-200 transition-colors"
+                    >
+                      <Mail className="w-4 h-4" />
+                      devansh.khanna88@gmail.com
+                    </a>
+                    <span className="text-cyan-100/60">•</span>
+                    <span className="text-cyan-100/70">
+                      We respond to all privacy requests within 30 days
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+              {/* Updates */}
+              <section className="space-y-4">
+                <h2 className="text-2xl font-bold text-cyan-300">Policy Updates</h2>
+                <p className="text-cyan-100/80 leading-relaxed">
+                  We may update this Privacy Policy from time to time. When we do, we'll notify you by updating 
+                  the "Last updated" date and, for significant changes, we'll provide additional notice through 
+                  our platform or via email.
+                </p>
+              </section>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PrivacyPolicy

@@ -319,10 +319,10 @@ const DilemmaForm = () => {
                   className="w-full p-4 bg-black/30 border border-white/20 rounded-xl text-white min-h-[120px]"
                 />
                 <div className="absolute top-2 right-2 flex gap-2">
-                  <button type="button" onClick={() => toggleMic('context')} className={`p-2 rounded-lg ${activeSpeechField === 'context' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 text-white'}`}>
+                  <button type="button" onClick={() => toggleMic('context')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'context' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                     <Mic className="w-4 h-4" />
                   </button>
-                  <button type="button" onClick={() => handleEnhance('context')} disabled={enhancingField === 'context'} className="p-2 rounded-lg bg-purple-500/20 text-purple-400">
+                  <button type="button" onClick={() => handleEnhance('context')} disabled={enhancingField === 'context'} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
                     {enhancingField === 'context' ? <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   </button>
                 </div>
@@ -341,10 +341,10 @@ const DilemmaForm = () => {
                   className="w-full p-4 bg-black/30 border border-white/20 rounded-xl text-white min-h-[120px]"
                 />
                 <div className="absolute top-2 right-2 flex gap-2">
-                  <button type="button" onClick={() => toggleMic('problem')} className={`p-2 rounded-lg ${activeSpeechField === 'problem' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 text-white'}`}>
+                  <button type="button" onClick={() => toggleMic('problem')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'problem' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                     <Mic className="w-4 h-4" />
                   </button>
-                  <button type="button" onClick={() => handleEnhance('problem')} disabled={enhancingField === 'problem'} className="p-2 rounded-lg bg-purple-500/20 text-purple-400">
+                  <button type="button" onClick={() => handleEnhance('problem')} disabled={enhancingField === 'problem'} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
                     {enhancingField === 'problem' ? <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   </button>
                 </div>
@@ -369,8 +369,12 @@ const DilemmaForm = () => {
                 <div className="relative">
                   <textarea value={mindsetVal} onChange={(e) => setMindsetVal(e.target.value)} placeholder="E.g., Growth, cautious..." className="w-full p-4 bg-black/30 border border-white/20 rounded-xl text-white" />
                   <div className="absolute top-2 right-2 flex gap-2">
-                    <button type="button" onClick={() => toggleMic('mindset')} className={`p-2 rounded-lg ${activeSpeechField === 'mindset' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 text-white'}`}><Mic className="w-4 h-4" /></button>
-                    <button type="button" onClick={() => handleEnhance('mindset')} className="p-2 rounded-lg bg-purple-500/20 text-purple-400"><Sparkles className="w-4 h-4" /></button>
+                    <button type="button" onClick={() => toggleMic('mindset')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'mindset' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
+                      <Mic className="w-4 h-4" />
+                    </button>
+                    <button type="button" onClick={() => handleEnhance('mindset')} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
+                      <Sparkles className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -382,8 +386,12 @@ const DilemmaForm = () => {
                 <div className="relative">
                   <textarea value={successVal} onChange={(e) => setSuccessVal(e.target.value)} placeholder="Define success..." className="w-full p-4 bg-black/30 border border-white/20 rounded-xl text-white" />
                   <div className="absolute top-2 right-2 flex gap-2">
-                    <button type="button" onClick={() => toggleMic('successMetrics')} className={`p-2 rounded-lg ${activeSpeechField === 'successMetrics' ? 'bg-red-500/20 text-red-400' : 'bg-white/5 text-white'}`}><Mic className="w-4 h-4" /></button>
-                    <button type="button" onClick={() => handleEnhance('successMetrics')} className="p-2 rounded-lg bg-purple-500/20 text-purple-400"><Sparkles className="w-4 h-4" /></button>
+                    <button type="button" onClick={() => toggleMic('successMetrics')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'successMetrics' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
+                      <Mic className="w-4 h-4" />
+                    </button>
+                    <button type="button" onClick={() => handleEnhance('successMetrics')} className="p-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors">
+                      <Sparkles className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </div>

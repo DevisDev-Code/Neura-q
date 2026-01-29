@@ -407,6 +407,10 @@ const ConsultingEngine = () => {
                                 </div>
                             </div>
 
+                            <div className="mt-8 p-4 border border-yellow-500/30 bg-yellow-950/10 rounded-lg text-xs text-yellow-200/70 text-center uppercase tracking-widest">
+                                ⚠️ 100% Automated • AI Generated Strategic Advisory • Verification Advised • Use Responsibly
+                            </div>
+
                             <div className="flex justify-center mt-12">
                                 <button onClick={() => window.location.reload()} className="text-gray-500 hover:text-white transition-colors">Start New Session</button>
                             </div>

@@ -10,6 +10,7 @@ serve(async (req) => {
         return new Response('ok', { headers: corsHeaders })
     }
 
+
     try {
         const { prompt } = await req.json()
         const apiKey = Deno.env.get('GEMINI_API_KEY')
@@ -18,13 +19,30 @@ serve(async (req) => {
             throw new Error('GEMINI_API_KEY not found in environment variables')
         }
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        // Enhanced Prompt Wrapper for Maximum Impact
+        const enhancedPrompt = `
+        CRITICAL INSTRUCTION: You are an elite MBB (McKinsey/Bain/BCG) Senior Partner. 
+        Provide a maximalist, extremely detailed strategic analysis. 
+        Do not hold back on complexity or depth.
+        
+        REQUIRED OUTPUT FRAMEWORKS:
+        1. **BCG Growth-Share Matrix**: Position the business units/products.
+        2. **McK 7S Framework**: Analyze broad organizational fit.
+        3. **Porter's Five Forces**: Deep industry scrutiny.
+        
+        ${prompt}
+        
+        Ensure the "executive_summary" is rich, actionable, and at least 300 words.
+        Mark the recommendation as "AI-Generated Strategic Advisory - Verification Advised".
+        `
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, { // Upgraded to Pro model for better logic
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
+                contents: [{ parts: [{ text: enhancedPrompt }] }]
             })
         })
 

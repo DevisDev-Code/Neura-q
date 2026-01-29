@@ -292,7 +292,6 @@ const DilemmaForm = () => {
                   <button type="button" onClick={() => toggleMic('context')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'context' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                     <Mic className="w-4 h-4" />
                   </button>
-
                 </div>
               </div>
               {errors.context && <p className="text-red-400 text-sm">{errors.context.message}</p>}
@@ -312,7 +311,6 @@ const DilemmaForm = () => {
                   <button type="button" onClick={() => toggleMic('problem')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'problem' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                     <Mic className="w-4 h-4" />
                   </button>
-
                 </div>
               </div>
               {errors.problem && <p className="text-red-400 text-sm">{errors.problem.message}</p>}
@@ -338,7 +336,6 @@ const DilemmaForm = () => {
                     <button type="button" onClick={() => toggleMic('mindset')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'mindset' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                       <Mic className="w-4 h-4" />
                     </button>
-
                   </div>
                 </div>
               </div>
@@ -353,7 +350,6 @@ const DilemmaForm = () => {
                     <button type="button" onClick={() => toggleMic('successMetrics')} className={`p-2 rounded-lg transition-colors ${activeSpeechField === 'successMetrics' ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                       <Mic className="w-4 h-4" />
                     </button>
-
                   </div>
                 </div>
               </div>

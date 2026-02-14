@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { IntakeForm } from './consulting-engine/IntakeForm'
 import { DebateRoom } from './consulting-engine/DebateRoom'
 import { SynthesisReport } from './consulting-engine/SynthesisReport'
@@ -6,6 +6,12 @@ import { MarketResearchPhase } from './consulting-engine/MarketResearchPhase'
 import { WelcomeScreen } from './consulting-engine/WelcomeScreen'
 import { performMarketResearch, generateDebateTurn, generateSynthesis } from '../services/consultingGeminiService'
 import { DebateMessage, IntakeData, Phase, AgentRole } from '../types/consulting'
+
+// ── DELAY CONFIG ──
+// 60 seconds between debate turns to respect Gemini free-tier RPM limits
+const TURN_DELAY_MS = 60_000;
+// 4 seconds after research before starting debate
+const POST_RESEARCH_DELAY_MS = 4_000;
 
 export default function ConsultingEngine() {
     const [phase, setPhase] = useState<Phase>('welcome')
@@ -20,6 +26,10 @@ export default function ConsultingEngine() {
     const [processingAgent, setProcessingAgent] = useState<AgentRole | undefined>(undefined)
     const [currentRound, setCurrentRound] = useState(1)
 
+    // Countdown timer state
+    const [countdown, setCountdown] = useState(0)
+    const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
     // Refs for loop state management
     const debateStateRef = useRef<{
         round: number
@@ -32,6 +42,24 @@ export default function ConsultingEngine() {
         lastArbiterCommand: 'normal',
         active: false,
     })
+
+    // ── COUNTDOWN HELPER ──
+    const waitWithCountdown = useCallback((ms: number): Promise<void> => {
+        return new Promise((resolve) => {
+            let remaining = Math.ceil(ms / 1000);
+            setCountdown(remaining);
+
+            countdownRef.current = setInterval(() => {
+                remaining -= 1;
+                setCountdown(remaining);
+                if (remaining <= 0) {
+                    if (countdownRef.current) clearInterval(countdownRef.current);
+                    setCountdown(0);
+                    resolve();
+                }
+            }, 1000);
+        });
+    }, []);
 
     // Workflow Controllers
     const handleStart = () => setPhase('intake')
@@ -48,18 +76,16 @@ export default function ConsultingEngine() {
             const result = await performMarketResearch(data)
             setResearchData(result)
             setIsProcessing(false)
-            setTimeout(() => {
-                setPhase('debate')
-                startDebateLoop(data, result)
-            }, 4000)
+            await waitWithCountdown(POST_RESEARCH_DELAY_MS)
+            setPhase('debate')
+            startDebateLoop(data, result)
         } catch (error) {
             console.error('Research failed', error)
             setResearchData('Research unavailable.')
             setIsProcessing(false)
-            setTimeout(() => {
-                setPhase('debate')
-                startDebateLoop(data, 'Research unavailable.')
-            }, 3000)
+            await waitWithCountdown(3000)
+            setPhase('debate')
+            startDebateLoop(data, 'Research unavailable.')
         }
     }
 
@@ -96,9 +122,9 @@ export default function ConsultingEngine() {
         setIsProcessing(false)
         setProcessingAgent(undefined)
 
-        // Determine Next Step
-        // INCREASED DELAY to 3000ms to avoid Quota RPM limits when using a single key
-        await new Promise((r) => setTimeout(r, 3000))
+        // ── RATE LIMIT DELAY ──
+        // Wait 60 seconds between turns to stay within Gemini free-tier RPM limits
+        await waitWithCountdown(TURN_DELAY_MS)
 
         if (agent === 'architect') {
             await executeTurn('destroyer', data, research)
@@ -123,7 +149,7 @@ export default function ConsultingEngine() {
                 debateStateRef.current.round = nextRound
                 setCurrentRound(nextRound)
 
-                // Safety Break: Max 5 rounds to prevent quota limits (Light Mode)
+                // Safety Break: Max 5 rounds to prevent quota limits
                 if (nextRound > 5) {
                     debateStateRef.current.active = false
                     setPhase('synthesis')
@@ -158,6 +184,7 @@ export default function ConsultingEngine() {
                     currentRound={currentRound}
                     isProcessing={isProcessing}
                     processingAgent={processingAgent}
+                    countdown={countdown}
                 />
             )}
 

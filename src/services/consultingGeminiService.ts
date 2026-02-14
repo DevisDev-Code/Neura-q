@@ -4,26 +4,37 @@ import { IntakeData, DebateMessage, AgentRole } from '../types/consulting';
 const CONSULTING_ENGINE_URL = import.meta.env.VITE_CONSULTING_ENGINE_URL || import.meta.env.VITE_GENERATE_STRATEGY_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Debug: log the resolved URL at module load time (remove after confirming fix)
+// Debug: log the resolved URL at module load time
 if (!CONSULTING_ENGINE_URL) {
     console.error('[ConsultingEngine] CRITICAL: No API URL found. Check VITE_CONSULTING_ENGINE_URL or VITE_GENERATE_STRATEGY_URL env vars.');
 } else {
     console.log('[ConsultingEngine] API URL resolved:', CONSULTING_ENGINE_URL);
 }
 
-// Helper for retry logic
-async function withRetry<T>(fn: () => Promise<T>, retries = 1, delay = 5000): Promise<T | null> {
-    try {
-        return await fn();
-    } catch (error) {
-        if (retries > 0) {
-            console.warn(`Request failed. Retrying in ${delay}ms...`, error);
-            await new Promise(res => setTimeout(res, delay));
-            return withRetry(fn, retries - 1, delay);
+// ── SMART RETRY with exponential backoff & 429 awareness ──
+async function withRetry<T>(fn: () => Promise<T>, retries = 4, baseDelay = 15000): Promise<T | null> {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            return await fn();
+        } catch (error: any) {
+            if (attempt === retries) {
+                console.error(`[ConsultingEngine] Max retries reached after ${retries + 1} attempts.`, error);
+                return null;
+            }
+
+            // Parse retry delay from 429 error if available
+            let waitTime = baseDelay * Math.pow(2, attempt); // Exponential backoff: 15s, 30s, 60s, 120s
+            const retryMatch = error?.message?.match(/retryDelay.*?(\d+)s/);
+            if (retryMatch) {
+                const suggestedDelay = parseInt(retryMatch[1]) * 1000;
+                waitTime = Math.max(waitTime, suggestedDelay + 5000); // Use suggested delay + 5s buffer
+            }
+
+            console.warn(`[ConsultingEngine] Attempt ${attempt + 1}/${retries + 1} failed. Retrying in ${Math.round(waitTime / 1000)}s...`, error?.message?.substring(0, 100));
+            await new Promise(res => setTimeout(res, waitTime));
         }
-        console.error("Max retries reached.", error);
-        return null;
     }
+    return null;
 }
 
 async function callEdgeFunction(body: Record<string, any>): Promise<string> {
@@ -38,8 +49,8 @@ async function callEdgeFunction(body: Record<string, any>): Promise<string> {
     });
 
     if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || `API Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(errorText || `API Error: ${response.status}`);
     }
 
     const data = await response.json();
@@ -57,7 +68,7 @@ export const performMarketResearch = async (data: IntakeData): Promise<string> =
                 competitors: data.competitors,
             },
         });
-    });
+    }, 4, 20000); // 4 retries, start at 20s
 
     return result || "Market intelligence unavailable due to connection limits. Proceeding with internal logic models.";
 };
@@ -88,7 +99,7 @@ export const generateDebateTurn = async (
             round,
             lastArbiterCommand,
         });
-    });
+    }, 4, 15000); // 4 retries, start at 15s
 
     if (!result) {
         return { text: "Signal lost due to high network traffic. Proceeding to next phase...", command: 'normal' };
@@ -126,7 +137,7 @@ export const generateSynthesis = async (
                 round: h.round,
             })),
         });
-    });
+    }, 4, 30000); // 4 retries, start at 30s (synthesis is most important)
 
     return result || "Final report generation failed due to API limits. Please review the debate logs above manually.";
 };

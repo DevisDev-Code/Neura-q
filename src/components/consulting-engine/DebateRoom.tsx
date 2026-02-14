@@ -7,16 +7,17 @@ interface Props {
     currentRound: number;
     isProcessing: boolean;
     processingAgent?: AgentRole;
+    countdown?: number;
 }
 
-export const DebateRoom: React.FC<Props> = ({ messages, currentRound, isProcessing, processingAgent }) => {
+export const DebateRoom: React.FC<Props> = ({ messages, currentRound, isProcessing, processingAgent, countdown = 0 }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [messages]);
+    }, [messages, countdown]);
 
     return (
         <div className="h-screen flex flex-col pt-12 pb-16 bg-[#050508] overflow-hidden relative">
@@ -51,6 +52,30 @@ export const DebateRoom: React.FC<Props> = ({ messages, currentRound, isProcessi
                             <div className="w-2 h-2 bg-[#3b82f6] rounded-full animate-bounce mr-1"></div>
                             <div className="w-2 h-2 bg-[#3b82f6] rounded-full animate-bounce mr-1" style={{ animationDelay: '75ms' }}></div>
                             <div className="w-2 h-2 bg-[#3b82f6] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        </div>
+                    )}
+
+                    {/* ── COUNTDOWN TIMER ── */}
+                    {countdown > 0 && !isProcessing && (
+                        <div className="self-center my-6 flex flex-col items-center gap-3 animate-pulse">
+                            <div className="relative w-20 h-20 flex items-center justify-center">
+                                {/* Rotating ring */}
+                                <svg className="absolute inset-0 w-full h-full animate-spin" style={{ animationDuration: '4s' }} viewBox="0 0 80 80">
+                                    <circle cx="40" cy="40" r="36" fill="none" stroke="#1f1f3a" strokeWidth="2" />
+                                    <circle
+                                        cx="40" cy="40" r="36" fill="none" stroke="#3b82f6" strokeWidth="2"
+                                        strokeDasharray="226" strokeDashoffset="170"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                                <span className="font-mono text-2xl font-bold text-[#00f0ff]">{countdown}</span>
+                            </div>
+                            <div className="font-mono text-[10px] text-[#64748b] tracking-[0.2em] uppercase text-center">
+                                Rate Limit Cooldown
+                            </div>
+                            <div className="font-mono text-[10px] text-[#3b82f6]/60 tracking-widest text-center max-w-xs">
+                                Spacing calls to stay within API limits. Next agent will engage shortly.
+                            </div>
                         </div>
                     )}
                 </div>

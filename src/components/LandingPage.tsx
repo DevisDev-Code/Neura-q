@@ -55,6 +55,51 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Consulting Engine CTA - At the Top */}
+      <section className="w-full py-16 relative bg-background">
+        <div className="px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="rounded-3xl bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-12 relative overflow-hidden text-center max-w-5xl mx-auto"
+          >
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+
+            <div className="relative z-10 space-y-8">
+              <div className="inline-block p-3 rounded-2xl bg-cyan-900/30 border border-cyan-500/30 mb-4">
+                <Brain className="w-10 h-10 text-cyan-400 animate-pulse" />
+              </div>
+
+              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-cyan-100 to-gray-400 bg-clip-text text-transparent">
+                🔥 Try Our New Consulting Engine
+              </h2>
+
+              <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                The War Room is live. Three elite AI agents—The Architect, The Destroyer, and The Arbiter—will
+                ruthlessly stress-test your business strategy with real market intelligence.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                <Link
+                  to="/consulting-engine"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-cyan-600 hover:bg-cyan-500 rounded-xl text-white font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+                >
+                  Launch Consulting Engine
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+              </div>
+
+              <div className="pt-8 flex items-center justify-center gap-8 text-sm text-gray-500 font-mono">
+                <span className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Live System</span>
+                <span className="flex items-center gap-2"><div className="w-2 h-2 bg-cyan-500 rounded-full"></div> 100% Autonomous</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* What is Neura-Q Section */}
       <section id="what-is-Neura-Q" className="w-full py-16 relative bg-background">
         <div className="px-6">
@@ -308,51 +353,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Consulting Engine CTA - NEW */}
-      <section className="w-full py-24 relative bg-background">
-        <div className="px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="rounded-3xl bg-gradient-to-br from-gray-900 to-black border border-gray-800 p-12 relative overflow-hidden text-center max-w-5xl mx-auto"
-          >
-            {/* Background Effects */}
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
 
-            <div className="relative z-10 space-y-8">
-              <div className="inline-block p-3 rounded-2xl bg-cyan-900/30 border border-cyan-500/30 mb-4">
-                <Brain className="w-10 h-10 text-cyan-400 animate-pulse" />
-              </div>
-
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-cyan-100 to-gray-400 bg-clip-text text-transparent">
-                Neura-Q Consulting Engine
-              </h2>
-
-              <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                The Autonomous Execution Plan. Input your business problem, and our neural engine builds a
-                strategic roadmap, researches competitors, and generates execution matrices in seconds.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <Link
-                  to="/consulting-engine"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-cyan-600 hover:bg-cyan-500 rounded-xl text-white font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]"
-                >
-                  Launch Consulting Engine
-                  <ChevronRight className="w-5 h-5" />
-                </Link>
-              </div>
-
-              <div className="pt-8 flex items-center justify-center gap-8 text-sm text-gray-500 font-mono">
-                <span className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Live System</span>
-                <span className="flex items-center gap-2"><div className="w-2 h-2 bg-cyan-500 rounded-full"></div> 100% Autonomous</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="w-full py-24 relative bg-background">

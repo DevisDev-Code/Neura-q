@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neura-Q — Consulting Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Syne', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+              mono: ['DM Mono', 'monospace'],
+              tech: ['Chakra Petch', 'sans-serif'],
+            },
+            colors: {
+              bg: '#050508',
+              surface: '#0a0a12',
+              surface2: '#121220',
+              border: '#1f1f3a',
+              gold: '#c9a84c', /* Kept for legacy accents if needed */
+              primary: '#6d28d9', /* Purple */
+              secondary: '#3b82f6', /* Blue */
+              accent: '#00f0ff', /* Cyan */
+              red: '#ff2a6d',
+              green: '#05d5fa',
+              text: '#e8e4dc',
+              muted: '#64748b',
+            },
+            animation: {
+              'grid-flow': 'grid-flow 20s linear infinite',
+              'pulse-glow': 'pulse-glow 6s ease-in-out infinite',
+              'gradient-x': 'gradient-x 3s ease infinite',
+              'scan-line': 'scan-line 8s linear infinite',
+              'float': 'float 10s ease-in-out infinite',
+            },
+            keyframes: {
+              'grid-flow': {
+                '0%': { transform: 'translateY(0)' },
+                '100%': { transform: 'translateY(50px)' },
+              },
+              'pulse-glow': {
+                '0%, 100%': { opacity: '0.1', transform: 'scale(1)' },
+                '50%': { opacity: '0.25', transform: 'scale(1.2)' },
+              },
+              'gradient-x': {
+                '0%, 100%': {
+                    'background-size': '200% 200%',
+                    'background-position': 'left center'
+                },
+                '50%': {
+                    'background-size': '200% 200%',
+                    'background-position': 'right center'
+                },
+              },
+              'scan-line': {
+                '0%': { transform: 'translateY(-100%)' },
+                '100%': { transform: 'translateY(100vh)' }
+              },
+              'float': {
+                '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                '50%': { transform: 'translateY(-20px) rotate(5deg)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #050508;
+        color: #e8e4dc;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050508; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1f1f3a; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3b82f6; 
+      }
+      
+      .tech-grid {
+        background-size: 50px 50px;
+        background-image: linear-gradient(to right, rgba(59, 130, 246, 0.15) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(59, 130, 246, 0.15) 1px, transparent 1px);
+        mask-image: linear-gradient(to bottom, black 20%, transparent 90%);
+      }
+
+      .perspective-grid {
+        transform: perspective(1000px) rotateX(60deg);
+        transform-origin: top;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom": "https://esm.sh/react-dom@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "remark-gfm": "https://esm.sh/remark-gfm@^4.0.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

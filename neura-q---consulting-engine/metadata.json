@@ -1,0 +1,5 @@
+{
+  "name": "Neura Q - Consulting Engine",
+  "description": "An agentic consulting engine where two AI personas (Strategist and Critic) debate business problems in real-time before synthesizing a strategic memo.",
+  "requestFramePermissions": []
+}

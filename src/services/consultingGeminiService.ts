@@ -1,8 +1,15 @@
 import { IntakeData, DebateMessage, AgentRole } from '../types/consulting';
 
-// Edge Function URL — configured via env
-const CONSULTING_ENGINE_URL = import.meta.env.VITE_CONSULTING_ENGINE_URL;
+// Edge Function URL — configured via env (fallback to GENERATE_STRATEGY_URL for backward compatibility)
+const CONSULTING_ENGINE_URL = import.meta.env.VITE_CONSULTING_ENGINE_URL || import.meta.env.VITE_GENERATE_STRATEGY_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Debug: log the resolved URL at module load time (remove after confirming fix)
+if (!CONSULTING_ENGINE_URL) {
+    console.error('[ConsultingEngine] CRITICAL: No API URL found. Check VITE_CONSULTING_ENGINE_URL or VITE_GENERATE_STRATEGY_URL env vars.');
+} else {
+    console.log('[ConsultingEngine] API URL resolved:', CONSULTING_ENGINE_URL);
+}
 
 // Helper for retry logic
 async function withRetry<T>(fn: () => Promise<T>, retries = 1, delay = 5000): Promise<T | null> {

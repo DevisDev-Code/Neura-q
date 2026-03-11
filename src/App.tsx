@@ -11,7 +11,6 @@ import ResultTot from './components/ResultTot'
 import ResultGot from './components/ResultGot'
 import ResultCot from './components/ResultCot'
 import { Toaster } from 'sonner'
-import ConsultingEngine from './components/ConsultingEngine'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import './App.css'
@@ -299,7 +298,6 @@ function AppContent() {
           <Route path="/result-tot" element={<ResultTot />} />
           <Route path="/result-got" element={<ResultGot />} />
           <Route path="/result-cot" element={<ResultCot />} />
-          <Route path="/consulting-engine" element={<ConsultingEngine />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
         </Routes>
